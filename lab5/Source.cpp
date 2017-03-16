@@ -1,7 +1,11 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <cmath>
 #include "cubic_spline.h"
+
+#define FIELD_WIDTH 20
+#define PRESICION 6
 
 using namespace std;
 
@@ -58,14 +62,32 @@ int main(int argc, const char * argv[])
 
 	spline.build_spline(x, y, count);
 
+	out << setw(FIELD_WIDTH) << "x";
+	out << setw(FIELD_WIDTH) << "Original func";
+	out << setw(FIELD_WIDTH) << "Newton Pol -> fault";
+	out << setw(FIELD_WIDTH) << "Newton Pol <- fault";
+	out << setw(FIELD_WIDTH) << "Lagrange fault";
+	out << setw(FIELD_WIDTH) << "Splines fault";
+	out << setw(FIELD_WIDTH) << "Magoranta" << endl;
+	for (int i = 0; i < FIELD_WIDTH * 7; i++)
+		out << "-";
+	out << endl;
+
 	for (double i = data[0][0]; i <= data[0][count-1]; i += delta)
 	{
-		out << i << "\t";
-		out << origFunc(i) << "\t";
-		out << abs(newtonPolinom(i, count, data) - origFunc(i) ) << "\t";
-		out << abs(newtonPolinom(i, count, dataRev) - origFunc(i) )<< "\t";
-		out << abs(lagrangePolinom(i, count, data) - origFunc(i) ) << "\t";
-		out << abs(spline.f(i) - origFunc(i)) << "\t";
+		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
+		out << i;
+		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
+		out << origFunc(i);
+		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
+		out << abs(newtonPolinom(i, count, data) - origFunc(i) );
+		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
+		out << abs(newtonPolinom(i, count, dataRev) - origFunc(i) );
+		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
+		out << abs(lagrangePolinom(i, count, data) - origFunc(i) );
+		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
+		out << abs(spline.f(i) - origFunc(i));
+		out << setw(FIELD_WIDTH);
 		out << magoranta(i,count,data) << endl;
 	}
 
@@ -106,7 +128,7 @@ double origFunc(double x)
 
 double sixDer(double x)
 {
-	return -124416*(302*cos(12*x)+57*cos(36*x)+cos(60*x))/(pow(sin(12*x),7));
+	return (-124416.0*(302.0*cos(12.0*x)+57.0*cos(36.0*x)+cos(60.*x)))/(pow(sin(12.*x),7.));
 }
 
 double newtonPolinom(double testX, int count, double ** data)
@@ -154,15 +176,15 @@ double lagrangePolinom(double testX, int count, double ** data)
 double magoranta(double testX, int count, double ** data)
 {
 	double sup = abs(sixDer(data[0][0]));
-	double der;
+	double der = 0;
 	double mult = 1;
 	for (int i = 0; i < count; i++)
 	{
 		der = abs(sixDer(data[0][i]));
 		if (sup < der) sup = der;
-		mult *= (testX - data[0][i]);
+		mult *= abs(testX - data[0][i]);
 	}
 
-	return (sup*mult)/factorial(count);
+	return (sup*mult)/factorial(count+1);
 }
 
