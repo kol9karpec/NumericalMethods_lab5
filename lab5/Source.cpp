@@ -73,20 +73,20 @@ int main(int argc, const char * argv[])
 		out << "-";
 	out << endl;
 
-	for (double i = data[0][0]; i <= data[0][count-1]; i += delta)
+	for (double i = data[0][0]; i <= data[0][count-1]+delta; i += delta)
 	{
 		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
-		out << i;
+		out << i <<"\t";
 		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
-		out << origFunc(i);
+		out << origFunc(i) << "\t";
 		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
-		out << abs(newtonPolinom(i, count, data) - origFunc(i) );
+		out << abs(newtonPolinom(i, count, data) - origFunc(i) ) << "\t";
 		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
-		out << abs(newtonPolinom(i, count, dataRev) - origFunc(i) );
+		out << abs(newtonPolinom(i, count, dataRev) - origFunc(i) ) << "\t";
 		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
-		out << abs(lagrangePolinom(i, count, data) - origFunc(i) );
+		out << abs(lagrangePolinom(i, count, data) - origFunc(i) ) << "\t";
 		out << setw(FIELD_WIDTH) << setprecision(PRESICION);
-		out << abs(spline.f(i) - origFunc(i));
+		out << abs(spline.f(i) - origFunc(i)) << "\t";
 		out << setw(FIELD_WIDTH);
 		out << magoranta(i,count,data) << endl;
 	}
@@ -100,9 +100,6 @@ int main(int argc, const char * argv[])
 		out << lagrangePolinom(i, count, data) << "\t";
 		out << spline.f(i) << endl;
 	}*/
-
-
-
 
 	delete[] data[0];
 	delete[] data[1];
